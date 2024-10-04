@@ -169,38 +169,6 @@ def load_test_data(test_snr_file, test_params_file, num_test=10000):
         
     return X_test_real, X_test_imag, h1_test_real, l1_test_real, v1_test_real, h1_test_imag, l1_test_imag, v1_test_imag, ra_test, dec_test, gps_time_test
 
-
-def load_test_data(test_snr_file, test_params_file, num_test=10000):
-    with h5py.File(test_snr_file, 'r') as snr_f, h5py.File(test_params_file, 'r') as params_f:
-        # Load SNR series
-        h1_test_real = np.real(snr_f['h1_snr_series'][0:num_test][()])
-        l1_test_real = np.real(snr_f['l1_snr_series'][0:num_test][()])
-        v1_test_real = np.real(snr_f['v1_snr_series'][0:num_test][()])
-        
-        h1_test_imag = np.imag(snr_f['h1_snr_series'][0:num_test][()])
-        l1_test_imag = np.imag(snr_f['l1_snr_series'][0:num_test][()])
-        v1_test_imag = np.imag(snr_f['v1_snr_series'][0:num_test][()])
-        
-        # Expand dimensions
-        h1_test_real = h1_test_real[:, :, None]
-        l1_test_real = l1_test_real[:, :, None]
-        v1_test_real = v1_test_real[:, :, None]
-        
-        h1_test_imag = h1_test_imag[:, :, None]
-        l1_test_imag = l1_test_imag[:, :, None]
-        v1_test_imag = v1_test_imag[:, :, None]
-        
-        # Concatenate real and imaginary parts
-        X_test_real = np.concatenate((h1_test_real, l1_test_real, v1_test_real), axis=2)
-        X_test_imag = np.concatenate((h1_test_imag, l1_test_imag, v1_test_imag), axis=2)
-        
-        # Load intrinsic parameters
-        ra_test = 2.0 * np.pi * params_f['ra'][0:num_test][()]
-        dec_test = np.arcsin(1.0 - 2.0 * params_f['dec'][0:num_test][()])
-        gps_time_test = params_f['gps_time'][0:num_test][()]
-        
-    return X_test_real, X_test_imag, h1_test_real, l1_test_real, v1_test_real, h1_test_imag, l1_test_imag, v1_test_imag, ra_test, dec_test, gps_time_test
-
 def load_test_real_events_data(test_snr_file, test_params_file):
     with h5py.File(test_snr_file, 'r') as snr_f, h5py.File(test_params_file, 'r') as params_f:
         # Load SNR series
